@@ -1,7 +1,5 @@
 # Design Pattern Module by 2510
 
----
-
 Modularized Classes and Code Snippets for Various Design Patterns for Unity\
 유니티에서의 디자인 패턴을 위한 모듈화된 클래스와 코드 스니펫 모음
 
