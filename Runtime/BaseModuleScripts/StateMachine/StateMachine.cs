@@ -58,16 +58,32 @@ namespace _2510.DesignPatternModule.StateMachine
             _isTransitioning = false;
         }
 
+        /// <summary>
+        /// Method to be called on Unity's Update event.
+        /// </summary>
         public void Update()
         {
             if (_isTransitioning) return;
             CurrentState?.Update();
         }
 
+        /// <summary>
+        /// Method to be called on Unity's FixedUpdate event.
+        /// </summary>
         public void PhysicsUpdate()
         {
             if (_isTransitioning) return;
             CurrentState?.PhysicsUpdate();
+        }
+
+        /// <summary>
+        /// Method to be called on custom update logic.
+        /// </summary>
+        /// <param name="deltaTime">Custom time delay between call</param>
+        public void CustomDelayUpdate(float deltaTime)
+        {
+            if (_isTransitioning) return;
+            CurrentState?.CustomDelayUpdate(deltaTime);
         }
     }
 }

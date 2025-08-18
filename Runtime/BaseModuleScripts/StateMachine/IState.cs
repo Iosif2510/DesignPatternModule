@@ -8,6 +8,7 @@ namespace _2510.DesignPatternModule.StateMachine
         public void Exit();
         public void Update();
         public void PhysicsUpdate();
+        public void CustomDelayUpdate(float deltaTime);
     }
 }
 
