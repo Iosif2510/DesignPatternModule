@@ -1,24 +1,26 @@
+using System;
+using System.Collections.Generic;
+
 namespace _2510.DesignPatternModule.StateMachine
 {
-    public class Transition
-    {
-        private IState _previousState;
-        private IState _nextState;
-        private StateMachine _machine;
+    public class Transition<TStateEnum> where TStateEnum : Enum
 
-        public Transition(StateMachine machine, IState previousState, IState nextState)
-        {
-            _machine = machine;
-            _previousState = previousState;
-            _nextState = nextState;
-        }
-        
-        public void DoTransition()
-        {
-            if (_machine.CurrentState == _nextState) return;
-            _previousState?.Exit();
-            _machine.ChangeState(_nextState);
-            _nextState?.Enter();
-        }
+    {
+    private TStateEnum _previousState;
+    private TStateEnum _nextState;
+    private StateMachine<TStateEnum> _machine;
+
+    public Transition(StateMachine<TStateEnum> machine, TStateEnum previousState, TStateEnum nextState)
+    {
+        _machine = machine;
+        _previousState = previousState;
+        _nextState = nextState;
+    }
+
+    public void DoTransition()
+    {
+        if (EqualityComparer<TStateEnum>.Default.Equals(_machine.CurrentStateEnum, _nextState)) return;
+        _machine.ChangeState(_nextState);
+    }
     }
 }

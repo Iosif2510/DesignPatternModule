@@ -1,12 +1,31 @@
+using System;
+using System.Collections.Generic;
+using UnityEngine;
+
 namespace _2510.DesignPatternModule.StateMachine
 {
-    public abstract class StateMachine
+    public abstract class StateMachine<TStateEnum> where TStateEnum : Enum
     {
-        protected IState currentState;
+        protected Dictionary<TStateEnum, IState<TStateEnum>> stateMachines = new();
+        
+        private bool _isTransitioning;
 
-        public IState CurrentState => currentState;
+        public TStateEnum CurrentStateEnum { get; protected set; }
+        public IState<TStateEnum> CurrentState => stateMachines.GetValueOrDefault(CurrentStateEnum);
 
-        protected abstract IState InitialState { get; }
+        protected abstract TStateEnum InitialState { get; }
+        
+        public void AddState(TStateEnum key, IState<TStateEnum> state)
+        {
+            stateMachines ??= new Dictionary<TStateEnum, IState<TStateEnum>>();
+            stateMachines.TryAdd(key, state);
+        }
+        
+        public void RemoveState(TStateEnum key)
+        {
+            if (stateMachines == null || !stateMachines.ContainsKey(key)) return;
+            stateMachines.Remove(key);
+        }
         
         public void EnterMachine()
         {
@@ -16,25 +35,39 @@ namespace _2510.DesignPatternModule.StateMachine
         /// <summary>
         /// Executes transition to a new state.
         /// </summary>
-        /// <param name="newState">Next <see cref="IState"/> to start</param>
-        public virtual void ChangeState(IState newState)
+        /// <param name="newState">Next State to start</param>
+        public virtual void ChangeState(TStateEnum newState)
         {
-            if (currentState == newState) return;
-            currentState?.Exit();
+            if (!stateMachines.ContainsKey(newState))
+            {
+                Debug.LogWarning($"State {newState} not found in the state machine.");
+                return;
+            }
+            
+            if (EqualityComparer<TStateEnum>.Default.Equals(CurrentStateEnum, newState))
+            {
+                Debug.LogWarning($"Trying to change to the same state: {newState}. No action taken.");
+                return;
+            }
+            _isTransitioning = true;
+            CurrentState?.Exit();
 
-            currentState = newState;
+            CurrentStateEnum = newState;
 
-            currentState?.Enter();
+            CurrentState?.Enter();
+            _isTransitioning = false;
         }
 
         public void Update()
         {
-            currentState?.Update();
+            if (_isTransitioning) return;
+            CurrentState?.Update();
         }
 
         public void PhysicsUpdate()
         {
-            currentState?.PhysicsUpdate();
+            if (_isTransitioning) return;
+            CurrentState?.PhysicsUpdate();
         }
     }
 }

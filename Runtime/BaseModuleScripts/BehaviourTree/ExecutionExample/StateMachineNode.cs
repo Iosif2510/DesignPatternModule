@@ -2,11 +2,11 @@ using System.Collections.Generic;
 
 namespace _2510.DesignPatternModule.BehaviourTree
 {
-    public class StateMachineUpdateNode : BehaviourNode
+    public class StateMachineUpdateNode<TStateEnum> : BehaviourNode where TStateEnum : System.Enum
     {
-        private readonly StateMachine.StateMachine _stateMachine;
+        private readonly StateMachine.StateMachine<TStateEnum> _stateMachine;
         
-        public StateMachineUpdateNode(StateMachine.StateMachine stateMachine)
+        public StateMachineUpdateNode(StateMachine.StateMachine<TStateEnum> stateMachine)
         {
             _stateMachine = stateMachine;
         }
