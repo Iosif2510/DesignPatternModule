@@ -27,7 +27,7 @@ namespace _2510.DesignPatternModule.StateMachine
             stateMachines.Remove(key);
         }
         
-        public void EnterMachine()
+        public virtual void EnterMachine()
         {
             ChangeState(InitialState);
         }
