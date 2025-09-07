@@ -1,23 +1,21 @@
-using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace _2510.DesignPatternModule.Singleton
 {
     /// <summary>
-    /// Abstract class for a universal singleton that extends MonoBehaviour.
-    /// This components will persist across scene loads.
+    /// Abstract class for a singleton that extends MonoBehaviour.
+    /// This singleton will be destroyed when the scene changes.
     /// To use, inherit from this class and implement the Init method.
     /// The singleton instance can be accessed via the static Instance property.
-    /// </summary>
     /// <example>
     /// <code>
-    /// public class GameManager : UniversalMonoBehaviourSingleton&lt;GameManager&gt;
+    /// public class SceneManager : SceneSingleton&lt;SceneManager&gt;
     /// </code>
     /// </example>
+    /// </summary>
     /// <typeparam name="T">Type of derived singleton class</typeparam>
-    public abstract class UniversalMonoBehaviourSingleton<T> : MonoBehaviour where T : UniversalMonoBehaviourSingleton<T>
+    public abstract class SceneSingleton<T> : MonoBehaviour where T : SceneSingleton<T>
     {
-        private static readonly string GameObjectName = "@Managers";
         private static bool _isShuttingDown = false;
         
         private static T _instance = null;
@@ -42,22 +40,20 @@ namespace _2510.DesignPatternModule.Singleton
 #endif
             if (_instance != null)
             {
-                if (Application.isPlaying) DontDestroyOnLoad(_instance.gameObject);
                 _instance.Init();
                 return;
             }
 
-            var managerObject = GameObject.Find(GameObjectName);
+            var managerObject = GameObject.Find(typeof(T).Name);
             if (managerObject == null)
             {
                 managerObject = new GameObject
                 {
-                    name = GameObjectName
+                    name = typeof(T).Name
                 };
             }
 
             _instance = managerObject.AddComponent<T>();
-            if (Application.isPlaying) DontDestroyOnLoad(managerObject);
             _instance.Init();
         }
 

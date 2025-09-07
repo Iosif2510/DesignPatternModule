@@ -1,6 +1,6 @@
 {
   "name": "com.2510.designpatternmodule",
-  "version": "0.2.2-preview",
+  "version": "0.3.0-preview",
   "displayName": "Collective Design Pattern Module for Unity",
   "description": "Provides a collection of classes useful for design patterns for game development.",
   "author": {
